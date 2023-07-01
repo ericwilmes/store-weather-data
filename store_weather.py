@@ -1,7 +1,5 @@
 import json
 import requests
-from git import Repo
-
 
 def save_weather_data(weather_data, file_path):
     try:
@@ -17,15 +15,7 @@ def save_weather_data(weather_data, file_path):
             existing_data["observations"].append(new_data)
 
     with open(file_path, "w") as f:
-        json.dump(weather_data, f)
-
-
-def commit_and_push(file_path, repo):
-    repo.index.add([file_path])
-    repo.index.commit("Update weather data")
-    origin = repo.remote(name="origin")
-    origin.push()
-
+        json.dump(existing_data, f)
 
 api_key = "0178ccfd8eeb43cbb8ccfd8eebb3cb43"
 station_id = "KCOCOLOR2562"
@@ -35,6 +25,3 @@ one_day_url = f"https://api.weather.com/v2/pws/observations/all/1day?stationId={
 response = requests.get(one_day_url)
 weather_data = response.json()
 save_weather_data(weather_data, "weather_data.json")
-
-repo = Repo(".")
-commit_and_push("weather_data.json", repo)
